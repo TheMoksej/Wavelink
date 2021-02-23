@@ -28,7 +28,7 @@ from discord.gateway import DiscordWebSocket
 from typing import Optional, Union
 
 from .errors import *
-from .filters import *
+from .eqs import *
 from .events import *
 
 
@@ -137,8 +137,6 @@ class Player:
         The node the player belongs to.
     volume: int
         The players volume.
-    position: int
-        The players seek position in the currently playing track in milliseconds. Returns 0 when there is no current track.
     channel_id: int
         The channel the player is connected to. Could be None if the player is not connected.
     """
@@ -157,9 +155,25 @@ class Player:
         self.volume = 100
         self.paused = False
         self.current = None
-        self._filter = Filter()
+        self._filter = Timescale()
         self._equalizer = Filter(equalizer=Equalizer.flat())
+        # self._equalizer = Equalizer.flat()
         self.channel_id = None
+
+    @property
+    def equalizer(self):
+        """The currently applied Equalizer."""
+        return self._equalizer
+
+    @property
+    def eq(self):
+        """Alias to :func:`equalizer`."""
+        return self.equalizer
+
+    @property
+    def filter(self):
+        """The currently applied :class:`Filter`."""
+        return self._filter
 
     @property
     def is_connected(self) -> bool:
@@ -194,21 +208,6 @@ class Player:
             return 0
 
         return min(position, self.current.duration)
-
-    @property
-    def equalizer(self):
-        """The currently applied Equalizer."""
-        return self._equalizer
-
-    @property
-    def eq(self):
-        """Alias to :func:`equalizer`."""
-        return self.equalizer
-
-    @property
-    def filter(self):
-        """The currently applied :class:`Filter`."""
-        return self._filter
 
     async def update_state(self, state: dict) -> None:
         state = state['state']
@@ -352,6 +351,7 @@ class Player:
 
     async def set_eq(self, equalizer: Equalizer) -> None:
         """|coro|
+
         Set the Players Equalizer.
 
         .. versionchanged:: 0.5.0
@@ -362,24 +362,20 @@ class Player:
         equalizer: :class:`Equalizer`
             The Equalizer to set.
         """
-
-        await self.node._send(op='filters', guildId=str(self.guild_id), **Filter(equalizer=equalizer).payload)
+        await self.node._send(op='equalizer', guildId=str(self.guild_id), bands=equalizer.eq)
         self._equalizer = equalizer
 
     async def set_equalizer(self, equalizer: Equalizer) -> None:
         """|coro|
+
         An alias to :func:`set_eq`.
         """
-
         await self.set_eq(equalizer)
 
     async def set_filter(self, filter: Filter) -> None:
         """|coro|
-
         Sets the players filter.
-
         .. versionadded:: 0.10.0
-
         Parameters
         ------------
         filter: :class:`Filter`
