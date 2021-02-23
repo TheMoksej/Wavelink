@@ -172,6 +172,13 @@ class Timescale:
     """
 
     def __init__(self, *, speed: float = 1.0, pitch: float = 1.0, rate: float = 1.0):
+        
+        if not 0 < speed <= 2:
+            raise ValueError('Speed must be more than 0.0 and less than or equal to 2.0')
+        if not 0 < pitch <= 2:
+            raise ValueError('Pitch must be more than 0.0 and less than or equal to 2.0')
+        if not 0 < rate <= 2:
+            raise ValueError('Rate must be more than 0.0 and less than or equal to 2.0')
 
         self.speed = speed
         self.pitch = pitch
