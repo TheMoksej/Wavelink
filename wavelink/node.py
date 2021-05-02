@@ -1,17 +1,13 @@
 """MIT License
-
 Copyright (c) 2019-2020 PythonistaGuild
-
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
 to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -39,10 +35,8 @@ __log__ = logging.getLogger(__name__)
 
 class Node:
     """A WaveLink Node instance.
-
     .. warning::
         You should not create :class:`Node` objects manually. Instead you should use, :func:`Client.initiate_node`.
-
     Attributes
     ------------
     host: str
@@ -139,9 +133,7 @@ class Node:
 
     async def get_tracks(self, query: str, *, retry_on_failure: bool = True) -> Union[list, TrackPlaylist, None]:
         """|coro|
-
         Search for and return a list of Tracks for the given query.
-
         Parameters
         ------------
         query: str
@@ -151,7 +143,6 @@ class Node:
             Bool indicating whether the Node should retry upto a maximum of 5 attempts on load failure.
             If this is set to True, the Node will attempt to retrieve tracks with an exponential backoff delay
             between retries. Defaults to True.
-
         Returns
         ---------
         Union[list, TrackPlaylist, None]:
@@ -198,19 +189,15 @@ class Node:
 
     async def build_track(self, identifier: str) -> Track:
         """|coro|
-
         Build a track object with a valid track identifier.
-
         Parameters
         ------------
         identifier: str
             The tracks unique Base64 encoded identifier. This is usually retrieved from various lavalink events.
-
         Returns
         ---------
         :class:`wavelink.player.Track`
             The track built from a Base64 identifier.
-
         Raises
         --------
         BuildTrackError
@@ -230,12 +217,10 @@ class Node:
 
     def get_player(self, guild_id: int) -> Optional[Player]:
         """Retrieve a player object associated with the Node.
-
         Parameters
         ------------
         guild_id: int
             The guild id belonging to the player.
-
         Returns
         ---------
         Optional[Player]
@@ -257,10 +242,8 @@ class Node:
 
     def set_hook(self, func) -> None:
         """Set the Node Event Hook.
-
         The event hook will be dispatched when an Event occurs.
         Maybe a coroutine.
-
         Raises
         --------
         WavelinkException
@@ -271,12 +254,12 @@ class Node:
 
         self.hook = func
 
-    async def destroy(self) -> None:
+    async def destroy(self, *, force: bool = False) -> None:
         """Destroy the node and all it's players."""
         players = self.players.copy()
 
         for player in players.values():
-            await player.destroy()
+            await player.destroy(force=force)
 
         try:
             self._websocket._task.cancel()

@@ -1,7 +1,5 @@
 """The MIT License (MIT)
-
 Copyright (c) 2019-2020 PythonistaGuild
-
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation
@@ -10,7 +8,6 @@ and/or sell copies of the Software, and to permit persons to whom the
 Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in
 all copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
 OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -18,10 +15,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-
 -------------------------------------------------------------------------------
 This example uses the following whihch must be installed prior to running:
-
     - Discord.py version >= 1.3.1 (pip install -U discord.py)
     - Wavelink version >= 0.5.1 (pip install -U wavelink)
     - menus version >= 1.0.0-a (pip install -U git+https://github.com/Rapptz/discord-ext-menus.git)
@@ -404,7 +399,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     async def cog_before_invoke(self, ctx: commands.Context):
         """Coroutine called before command invocation.
-
         We mainly just want to check whether the user is in the players controller channel.
         """
         player: Player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player, context=ctx)
@@ -438,7 +432,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         required = math.ceil((len(channel.members) - 1) / 2.5)
 
         if ctx.command.name == 'stop':
-            if len(channel.members) - 1 == 2:
+            if len(channel.members) == 3:
                 required = 2
 
         return required
